@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Headlines</string>
+    <string name="api_key">75db894936c94ba19fef74163b20a84e</string>
+    <string name="Loading">Loading...</string>
+</resources>
