@@ -22,6 +22,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import static com.example.headlines.ArticleRepo.TAG;
 
 public class HeadlineAdapter extends RecyclerView.Adapter<HeadlineAdapter.MyViewHolder> {
+    private OnItemClicked onClick;
+
+    public interface OnItemClicked {
+        void onItemClick(int position,String url);
+    }
+
+
     List<Article> articles=new ArrayList<>();
 
     public  HeadlineAdapter(){
@@ -37,8 +44,8 @@ public class HeadlineAdapter extends RecyclerView.Adapter<HeadlineAdapter.MyView
     }
 
     @Override
-    public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-        Article currentArticle=articles.get(position);
+    public void onBindViewHolder(@NonNull MyViewHolder holder, final int position) {
+        final Article currentArticle=articles.get(position);
         holder.title.setText(currentArticle.getTitle());
         holder.description.setText(currentArticle.getDescription());
         holder.source.setText(currentArticle.getSource().getName());
@@ -50,6 +57,12 @@ public class HeadlineAdapter extends RecyclerView.Adapter<HeadlineAdapter.MyView
                 .placeholder(R.drawable.loading)
                 .centerCrop()
                 .into(holder.thumbnail);
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onClick.onItemClick(position,currentArticle.getUrl());
+            }
+        });
 
 
 
@@ -119,5 +132,9 @@ public class HeadlineAdapter extends RecyclerView.Adapter<HeadlineAdapter.MyView
             return seconds+ " seconds ago";
 
 
+    }
+    public void setOnClick(OnItemClicked onClick)
+    {
+        this.onClick=onClick;
     }
 }

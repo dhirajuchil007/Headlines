@@ -3,6 +3,7 @@ package com.example.headlines;
 import android.app.Application;
 import android.content.Intent;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.example.headlines.DB.AppDatabase;
 import com.example.headlines.Model.Article;
@@ -83,6 +84,7 @@ public class ArticleRepo {
             public void onFailure(Call<Headlines> call, Throwable t)
             {
                 Log.e(TAG, "onFailure:Failed to fetch data "+t.getMessage());
+                Toast.makeText(application.getApplicationContext(),"You're reading offline",Toast.LENGTH_SHORT).show();
 
             }
         });
@@ -95,7 +97,7 @@ public class ArticleRepo {
     }
 
 
-    public void refreshData(Application application, final SwipeRefreshLayout swipeRefreshLayout){
+    public void refreshData(final Application application, final SwipeRefreshLayout swipeRefreshLayout){
 
         Retrofit retrofit=new Retrofit.Builder().baseUrl("https://newsapi.org/v2/")
                 .addConverterFactory(GsonConverterFactory.create()).build();
@@ -141,6 +143,8 @@ public class ArticleRepo {
             public void onFailure(Call<Headlines> call, Throwable t)
             {
                 Log.e(TAG, "onFailure:Failed to fetch data "+t.getMessage());
+                swipeRefreshLayout.setRefreshing(false);
+                Toast.makeText(application.getApplicationContext(),"You're reading offline,Turn on data/WiFi to refresh",Toast.LENGTH_SHORT).show();
 
             }
         });

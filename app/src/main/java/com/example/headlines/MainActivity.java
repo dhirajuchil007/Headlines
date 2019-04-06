@@ -23,11 +23,12 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements HeadlineAdapter.OnItemClicked{
     AppDatabase mDb;
     private HeadlineViewModel headlineViewModel;
     public static final String TAG="mainactivity";
     TextView loadingIndicator;
+    public static final String ARTICLE_URL="articleurl";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +44,7 @@ public class MainActivity extends AppCompatActivity {
         headlinesRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         final HeadlineAdapter headlineAdapter=new HeadlineAdapter();
         headlinesRecyclerView.setAdapter(headlineAdapter);
+        headlineAdapter.setOnClick(this);
 
         headlineViewModel= ViewModelProviders.of(this).get(HeadlineViewModel.class);
         headlineViewModel.loadDataFromDB().observe(this, new Observer<List<Article>>() {
@@ -75,6 +77,15 @@ public class MainActivity extends AppCompatActivity {
 
 
 
+
+    }
+
+    @Override
+    public void onItemClick(int position,String url) {
+        Log.d(TAG, "onItemClick: "+url);
+        Intent intent=new Intent(MainActivity.this,ReadArticle.class);
+        intent.putExtra(ARTICLE_URL,url);
+        startActivity(intent);
 
     }
 }
